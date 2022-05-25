@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Pokemon</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="ability_name">Ability Name</string>
+    <string name="effect">Effect</string>
+    <string name="pokemon_name">Pokemon Name</string>
+</resources>
