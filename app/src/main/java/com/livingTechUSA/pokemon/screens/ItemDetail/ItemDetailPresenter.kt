@@ -3,7 +3,6 @@ package com.livingTechUSA.pokemon.screens.ItemDetail
 import com.livingTechUSA.pokemon.Base.BasePresenter
 import com.livingTechUSA.pokemon.models.Ability
 import com.livingTechUSA.pokemon.models.Pokemon
-import com.livingTechUSA.pokemon.models.toNewModel
 import com.livingTechUSA.pokemon.service.coroutines.IAppDispatchers
 import com.livingTechUSA.pokemon.services.api.AbilityApiResponse
 import kotlinx.coroutines.CoroutineScope
@@ -32,17 +31,11 @@ class ItemDetailPresenter(
             initAbilityList(mModel.getPokemon().name)?.abilities.let {
                 val list = mutableListOf<Ability>()
                 if (it != null) {
-                    for (abilities in it) {
-//                        if (abilities != null) {
-//                            for (ability in abilities.)
-                        if (abilities != null) {
-                            //for(it in abilities.ability) {
-                                list.add(abilities.ability)
-                           // }
-                        }
-                        }
+                    for(abilities in it){
+                       list.add(abilities.ability)
                     }
-               //}
+                }
+
                 mModel.addAbilities(
                     list
                 )

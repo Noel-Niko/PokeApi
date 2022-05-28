@@ -1,10 +1,9 @@
 package com.livingTechUSA.pokemon.screens.ItemList
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -14,6 +13,7 @@ import com.livingTechUSA.pokemon.R
 import com.livingTechUSA.pokemon.databinding.FragmentItemListBinding
 import com.livingTechUSA.pokemon.models.Pokemon
 import com.livingTechUSA.pokemon.service.coroutines.IAppDispatchers
+import com.livingTechUSA.pokemon.util.Ui
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -38,15 +38,50 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
     ): View? {
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
         initPresenter()
+        val search = binding.searchEditText
+        search?.doAfterTextChanged {
+            if(search.text.length >= 2) {
+                launch(appDispatcher.io()) {
+                    val searchResult = presenter.searchByName(search.text.toString().lowercase())
+                    val pokeList: MutableList<Pokemon> = mutableListOf()
+                    searchResult?.pokemon?.let { it1 -> pokeList.add(it1) }
+                    updateList(
+                        pokeList
+                    )
+                }
+            }
+        }
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.refresh, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.refresh -> {
+                binding.searchEditText?.text?.clear()
+                presenter.initAndShow()
+                return true
+
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView: RecyclerView? = binding.itemList
+        val recyclerView: RecyclerView = binding.itemList
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
+
+        presenter.onCreated()
+
         itemListAdapter = ItemListRecyclerViewAdapter(
-            pokemonList,  itemDetailFragmentContainer,
+            pokemonList, itemDetailFragmentContainer,
             object : ItemListRecyclerViewAdapter.ListItemSelectListener<Pokemon> {
                 override fun onSelect(item: Pokemon) {
                     selectItem(item)
@@ -55,7 +90,7 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
         if (recyclerView != null) {
             setupRecyclerView(recyclerView)
         }
-        presenter.onCreated()
+
     }
 
     private fun selectItem(item: Pokemon) {
@@ -88,7 +123,6 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
     }
 
 
-
     override fun showNoPokemonFound(show: Boolean) {
         if (show) {
             Toast.makeText(context, "No Pokemon found for search criteria.", Toast.LENGTH_SHORT)
@@ -117,88 +151,6 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
         }
     }
 
-
-//
-//    override fun showSearchViewEndDrawable(show: Boolean) {
-//        if(show){
-//            binding.customToobar?.searchView?.visibility = View.VISIBLE
-//        }else {
-//            binding.customToobar?.searchView?.visibility = View.GONE
-//        }
-//
-//    }
-//
-//    /**
-//     * Extension function for showing clear text drawable in EditText
-//     * */
-//    private fun AppCompatEditText.showEndDrawable(show: Boolean) {
-//        when {
-//            show -> setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_close_edittext, 0)
-//            else -> setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-//        }
-//    }
-//
-//    /**
-//     * Shows/Hides search view
-//     * */
-//    private fun showSearchView(show: Boolean) {
-//        launch(appDispatcher.ui()) {
-//                if (show){
-//                    binding.customToobar?.articleSearchView?.visibility = View.VISIBLE
-//                    binding.customToobar?.searchView?.visibility = View.GONE
-//                } else View.GONE
-//            if (!show) {
-//                presenter.clearSearchText()
-//                binding.customToobar?.articleSearchView?.setText("")
-//                binding.customToobar?.articleSearchView?.visibility = View.GONE
-//                binding.customToobar?.searchView?.visibility = View.VISIBLE
-//            }
-//            presenter.setSearchSelected(show)
-//        }
-//    }
-//
-//    /**
-//     * invalidateOptionsMenu() calls onCreateOptionsMenu() and resets the search bar as well as the menu icon
-//     * */
-//    override fun clearSearchTextIfAny() {
-//        showSearchView(false)
-//        activity?.invalidateOptionsMenu()
-//    }
-//
-//
-//    override fun setSearchQueryTextListener() {
-//        binding.customToobar?.articleSearchView?.doAfterTextChanged {
-//            presenter.onSearchQueryChange(
-//                it?.toString() ?: ""
-//            )
-//        }
-//    }
-//
-//    override fun showErrorMessage(show: Boolean, message: String) {
-//        binding.errorMessage?.apply {
-//            isVisible = show
-//            text = message
-//        }
-//    }
-//    /**
-//     * Extension function for clearing search in EditText
-//     * */
-//    @SuppressLint("ClickableViewAccessibility")
-//    private fun AppCompatEditText.setRightDrawableOnTouchListener(func: AppCompatEditText.() -> Unit) {
-//        setOnTouchListener { view, event ->
-//            var isClicked = false
-//            if (event.action == MotionEvent.ACTION_UP) {
-//                val drawable = compoundDrawables[2]
-//                drawable?.let {
-//                    if (event.rawX >= (right - drawable.bounds.width())) {
-//                        func()
-//                        isClicked = true
-//                    }
-//                }
-//            }
-//            isClicked
-//        }
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

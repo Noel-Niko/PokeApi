@@ -1,11 +1,9 @@
-package com.livingTechUSA.pokemon.screens.ItemList
+package com.livingTechUSA.pokemon.screens.SavedList
 
 import android.content.Context
-import android.text.Editable
 import com.livingTechUSA.pokemon.models.Pokemon
 import com.livingTechUSA.pokemon.service.coroutines.IAppDispatchers
 import com.livingTechUSA.pokemon.services.api.PokemonApiResponse
-import com.livingTechUSA.pokemon.services.api.SearchPokemonApiResponse
 import com.livingTechUSA.pokemon.services.remoteService.RequestManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -14,7 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
 
-class ItemListModel : CoroutineScope, KoinComponent {
+class SavedListModel : CoroutineScope, KoinComponent {
     private val mContext: Context by inject()
     private val appDispatchers: IAppDispatchers by inject()
     private val pokemonList: MutableList<Pokemon> = mutableListOf()
@@ -71,18 +69,6 @@ class ItemListModel : CoroutineScope, KoinComponent {
 
     fun setIsPokemonSelected(isSelected: Boolean) {
         mIsPokemonSelected = isSelected
-    }
-
-    suspend fun pokemonApiSearch(text: String?): SearchPokemonApiResponse? {
-        if (text != null) {
-            val result = manager.findPokemon(text)
-            if (result != null) {
-                return result
-            } else {
-                return null
-            }
-        }
-        return null
     }
 
 

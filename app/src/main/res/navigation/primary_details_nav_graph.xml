@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/item_list_fragment"
         android:name="com.livingTechUSA.pokemon.screens.ItemList.ItemListFragment"
-        android:label="ItemListFragment">
+        android:label="@string/P_List">
         <action
             android:id="@+id/show_item_detail"
             app:destination="@id/item_detail_fragment" />
@@ -16,10 +16,21 @@
     <fragment
         android:id="@+id/item_detail_fragment"
         android:name="com.livingTechUSA.pokemon.screens.ItemDetail.ItemDetailFragment"
-        android:label="item_detail"
+        android:label="@string/pokemon_name"
         tools:layout="@layout/fragment_item_detail">
         <argument
             android:name="pokemon"
             app:argType="com.livingTechUSA.pokemon.models.Pokemon" />
+        <action
+            android:id="@+id/action_item_detail_fragment_to_savedListFragment"
+            app:destination="@id/saved_list_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/saved_list_fragment"
+        android:name="com.livingTechUSA.pokemon.screens.SavedList.SavedListFragment"
+        android:label="@string/saved_list">
+        <action
+            android:id="@+id/action_saved_list_fragment_to_item_detail_fragment"
+            app:destination="@id/item_detail_fragment" />
     </fragment>
 </navigation>

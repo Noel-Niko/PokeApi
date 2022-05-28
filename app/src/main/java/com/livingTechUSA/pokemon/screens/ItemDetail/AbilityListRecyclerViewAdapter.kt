@@ -1,10 +1,12 @@
 package com.livingTechUSA.pokemon.screens.ItemDetail
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.livingTechUSA.pokemon.databinding.AbilityListContentBinding
@@ -101,11 +103,19 @@ class AbilityListRecyclerViewAdapter(
     inner class ViewHolder(context: Context, val binding: AbilityListContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var abilityName: TextView = binding.abilityName
-        var abilityEffect: TextView = binding.effect
+        var abilityDetails: TextView = binding.detailsLink
+
+
+
          fun onBind(position: Int) {
             val ability1 = ability[position]
             abilityName.text = ability1.name
-             abilityEffect.text = ability1.url
+             abilityDetails.text = ability1.url
+             binding.detailsLink.setOnClickListener {
+                 val text: String = binding.detailsLink.text as String
+                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(text))
+                 startActivity(context, browserIntent, null)
+             }
         }
     }
 

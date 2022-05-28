@@ -4,4 +4,14 @@
     <string name="ability_name">Ability Name</string>
     <string name="effect">Effect</string>
     <string name="pokemon_name">Pokemon Name</string>
+    <string name="details_link">Details Link</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="view_saved">View Saved</string>
+    <string name="save_success">Success saving to your collection</string>
+    <string name="delete_success">Success deleting from your collection</string>
+    <string name="P_List">Pokemon List</string>
+    <string name="saved_list">Saved List</string>
+    <string name="search_hint">Search here...</string>
+    <string name="refresh_list">Refresh List</string>
 </resources>

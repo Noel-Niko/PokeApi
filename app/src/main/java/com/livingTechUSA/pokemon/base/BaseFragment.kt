@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
-import com.livingTechUSA.pokemon.util.UI
+import com.livingTechUSA.pokemon.util.Ui
 
 abstract class BaseFragment : Fragment() {
     private var presenter: BasePresenter? = null
@@ -74,6 +74,6 @@ abstract class BaseFragment : Fragment() {
     abstract fun initPresenter(): BasePresenter?
 
 
-    open fun isTablet(): Boolean = activity?.let { UI.isTablet(it) } ?: false
+    open fun isTablet(): Boolean = activity?.let { Ui.isTablet(it) } ?: false
 
 }

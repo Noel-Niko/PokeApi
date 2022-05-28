@@ -1,4 +1,4 @@
-package com.livingTechUSA.pokemon.screens.ItemList
+package com.livingTechUSA.pokemon.screens.SavedList
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,11 +13,11 @@ import com.livingTechUSA.pokemon.models.Pokemon
 import com.livingTechUSA.pokemon.util.Constant
 import com.squareup.picasso.Picasso
 
-class ItemListRecyclerViewAdapter(
+class SavedListRecyclerViewAdapter(
     private val pokemon: MutableList<Pokemon>,
     private val itemDetailFragmentContainer: View?,
     private val mItemSelectListener: ListItemSelectListener<Pokemon>
-) : RecyclerView.Adapter<ItemListRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<SavedListRecyclerViewAdapter.ViewHolder>() {
 
     lateinit var context: Context
 
@@ -29,9 +29,7 @@ class ItemListRecyclerViewAdapter(
         context = parent.context
         val binding =
             ItemListContentBinding.inflate(LayoutInflater.from(context), parent, false)
-
         return ViewHolder(context, binding)
-
     }
 
     override fun getItemCount() = pokemon.size
@@ -106,13 +104,13 @@ class ItemListRecyclerViewAdapter(
         RecyclerView.ViewHolder(binding.root) {
         val title: TextView = binding.Name
         val image: ImageView = binding.imageView
-         fun onBind(position: Int) {
+        fun onBind(position: Int) {
             val pokemon = pokemon[position]
             title.text = pokemon.name
             //Load image
-             if(pokemon.imageUrl.isNullOrEmpty().not()) {
-                 Picasso.get().load(pokemon.imageUrl).into(image)
-             }
+            if(pokemon.imageUrl.isNullOrEmpty().not()) {
+                Picasso.get().load(pokemon.imageUrl).into(image)
+            }
 
             itemView.setOnClickListener { v: View ->
                 pokemon.let {

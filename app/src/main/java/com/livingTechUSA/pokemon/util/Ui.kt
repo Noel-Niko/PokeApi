@@ -1,27 +1,35 @@
 package com.livingTechUSA.pokemon.util
 
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import com.livingTechUSA.pokemon.R
 
-class UI {
+class Ui {
     companion object {
 
-        /**
-         * Return @ColorInt base on build version
-         */
-        @ColorInt
-        fun getColorInt(context: Context, @ColorRes color: Int): Int {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                context.resources.getColor(color, null)
-            } else {
-                context.resources.getColor(color)
+        @JvmStatic
+        fun dismissKeyboard(activity: Activity) {
+            activity.currentFocus?.let {
+                val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
             }
         }
+
+        @JvmStatic
+        fun showSoftKeyBoard(activity: Activity, editBox: EditText){
+            val inputMethodManager: InputMethodManager =
+                activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            editBox.requestFocus()
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+        }
+
 
         fun isTablet(context: Context): Boolean {
             return context.resources.getBoolean(R.bool.is_tablet)
