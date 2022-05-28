@@ -1,3 +1,3 @@
 This project is designed to provide an example of API calls via retrofit, Room Database, and Navigation. 
-It also incliudes regEx parsing and Picasso to obtain and display image URL's, and further contains 
+It also includes regEx parsing and Picasso to obtain and display image URL's, and further contains
 a search function calling additional Pokemon from the server.
