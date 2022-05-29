@@ -1,6 +1,5 @@
 package com.livingTechUSA.pokemon.screens.ItemList
 
-import android.text.Editable
 import com.livingTechUSA.pokemon.Base.BasePresenter
 import com.livingTechUSA.pokemon.models.Pokemon
 import com.livingTechUSA.pokemon.service.coroutines.IAppDispatchers
@@ -58,6 +57,18 @@ class ItemListPresenter(
 
     suspend fun searchByName(text: String?): SearchPokemonApiResponse? {
         return mModel.pokemonApiSearch(text)
+    }
+
+    fun filter(text: String):Boolean {
+        val filteredList: ArrayList<Pokemon> = ArrayList<Pokemon>()
+        val currentList = mModel.getPokemon()
+        for (item in currentList) {
+            if (item.name.lowercase().contains(text.lowercase())) {
+                filteredList.add(item)
+            }
+        }
+        mView.showFilteredList(filteredList)
+        return (!filteredList.isNullOrEmpty())
     }
 
 

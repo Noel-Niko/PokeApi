@@ -9,4 +9,5 @@ interface ItemListView {
     suspend fun updateList(pokemonList: List<Pokemon>)
     fun initPresenter(): ItemListPresenter
     suspend fun showPokemon(pokemonList: List<Pokemon>)
+    fun showFilteredList(pokemonList: List<Pokemon>)
 }

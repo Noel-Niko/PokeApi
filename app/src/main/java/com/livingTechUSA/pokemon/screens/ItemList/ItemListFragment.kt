@@ -13,11 +13,11 @@ import com.livingTechUSA.pokemon.R
 import com.livingTechUSA.pokemon.databinding.FragmentItemListBinding
 import com.livingTechUSA.pokemon.models.Pokemon
 import com.livingTechUSA.pokemon.service.coroutines.IAppDispatchers
-import com.livingTechUSA.pokemon.util.Ui
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import kotlin.coroutines.CoroutineContext
+
 
 class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent {
     val appDispatcher: IAppDispatchers by inject()
@@ -40,17 +40,21 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
         initPresenter()
         val search = binding.searchEditText
         search?.doAfterTextChanged {
-            if(search.text.length >= 2) {
-                launch(appDispatcher.io()) {
-                    val searchResult = presenter.searchByName(search.text.toString().lowercase())
-                    val pokeList: MutableList<Pokemon> = mutableListOf()
-                    searchResult?.pokemon?.let { it1 -> pokeList.add(it1) }
-                    updateList(
-                        pokeList
-                    )
-                }
+                presenter.filter(search.text.toString().lowercase())
+                if (presenter.filter(search.text.toString().lowercase()) == false) {
+                    if (search.text.length >= 2) {
+                        launch(appDispatcher.io()) {
+                            val searchResult =
+                                presenter.searchByName(search.text.toString().lowercase())
+                            val pokeList: MutableList<Pokemon> = mutableListOf()
+                            searchResult?.pokemon?.let { it1 -> pokeList.add(it1) }
+                            updateList(
+                                pokeList
+                            )
+                        }
+                    }
             }
-        }
+       }
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -137,7 +141,11 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
     }
 
     override suspend fun updateList(pokemonList: List<Pokemon>) {
-        launch(appDispatcher.ui()) { binding.progressBar?.visibility = View.VISIBLE }
+        coroutineScope {
+            launch(appDispatcher.ui()) {
+                binding.progressBar?.visibility = View.VISIBLE
+            }
+        }
         coroutineScope {
             val job = launch {
                 itemListAdapter.clearPokemon()
@@ -151,6 +159,9 @@ class ItemListFragment : Fragment(), ItemListView, CoroutineScope, KoinComponent
         }
     }
 
+    override fun showFilteredList(pokemonList: List<Pokemon>) {
+        itemListAdapter.updateList(pokemonList)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
